@@ -1,0 +1,10 @@
+CREATE TABLE Comments
+(
+CommentID integer NOT NULL AUTO_INCREMENT,
+SenderID varchar(128) NOT NULL,
+RecipientID varchar(128) NOT NULL,
+DatePosted TIMESTAMP NOT NULL DEEFAULT CURRENT_TIMESTAMP,
+Content varchar(500) NOT NULL,
+PRIMARY KEY (CommentID)
+) 
+ENGINE = InnoDB;
