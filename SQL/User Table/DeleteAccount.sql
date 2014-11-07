@@ -1,2 +1,2 @@
-DELETE FROM Users
+DELETE FROM User
 WHERE FacebookUserID='723476789';

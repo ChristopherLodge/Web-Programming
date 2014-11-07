@@ -1,0 +1,2 @@
+DELETE FROM Comment
+WHERE FacebookUserID='723476789' AND CommentID=1;
