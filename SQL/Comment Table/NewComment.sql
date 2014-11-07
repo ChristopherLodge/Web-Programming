@@ -1,0 +1,3 @@
+INSERT INTO Comment (SenderID, RecipientID, Content)
+VALUES
+('123456789', '723476789','THIS IS A SAMPLE COMMENT')

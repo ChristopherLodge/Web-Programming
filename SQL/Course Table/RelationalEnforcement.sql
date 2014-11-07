@@ -1,0 +1,4 @@
+ALTER TABLE Course
+(
+ADD FOREIGN KEY (LearnerID) REFERENCES User(FacebookUserID) ON DELETE CASCADE
+);
