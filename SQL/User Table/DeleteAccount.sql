@@ -1,0 +1,2 @@
+DELETE FROM Users
+WHERE FacebookUserID='723476789';
