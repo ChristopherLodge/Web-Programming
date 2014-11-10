@@ -1,7 +1,7 @@
 <?php
 function randomprofile() //selects a random facebook user id for random image on index
 {
-	require_once('DBConnect.php'); //conect to db
+	require_once('DBConnect.php'); //connect to db
 	if (mysqli_connect_errno())  //connection erorr handle 
 				{
 				  echo "Failed to connect to MySQL: " . mysqli_connect_error();
