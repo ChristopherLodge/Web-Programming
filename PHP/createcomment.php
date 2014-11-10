@@ -18,23 +18,24 @@ else if ($_SESSION[user_id] != $_POST['senderid'])
 }
 else
 {
-	$recipient = htmlentities($_POST['recipientid']); //catch receiver from form and strip html
-	$sender = htmlentities($_POST['senderid']); //catch sender from form and strip html
-	$content = htmlentities($_POST['contentid']); //catch content from form and strip html
-
-	$stmt = mysqli_prepare($db, "INSERT INTO Comment (SenderID, RecipientID, Content) VALUES (?, ?,?)"); //prepare statement
+	/* Catch content from HTML form, and format appropriately */
+	$recipient = htmlentities($_POST['recipientid']); 
+	$sender = htmlentities($_POST['senderid']); 
+	$content = htmlentities($_POST['contentid']); 
+	/* End user input */
 	
-	if (!mysqli_stmt_bind_param($stmt, 'sss', $sender, $recipient, $content)) //define parameters
+	$query = "INSERT INTO Comment (SenderID, RecipientID, Content) VALUES (?, ?,?)"; //query
+		$stmt = mysqli_prepare($db, $query); //prepare query
+		mysqli_stmt_bind_param($stmt, 'sss', $sender, $recipient, $content); //define parameters (three strings)
+	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 	{
-		echo "binding failed"; //investigate if correct/for error command
-		exit();
+		printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
 	}
-	else if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement, print error if any
+	else
 	{
-		echo "failure"; //investigate if correct/ for error command
-		exit();
+		printf("%d Comment left successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of comments left (will always be 1), and success.
 	}
-
+	mysqli_stmt_close($stmt); //close prepared statement
 }
-mysqli_close ($db);
+mysqli_close ($db); //close database connection
 ?>
