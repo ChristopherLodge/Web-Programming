@@ -7,7 +7,7 @@
 	if (!checkuserstatus ()) //user is not online! 
 	{
 ?>
-		<!-- Put Guest HTML bar here --> 
+		<!-- Put Guest HTML header here and login/register button--> 
 <?php 
 	}
 	else
