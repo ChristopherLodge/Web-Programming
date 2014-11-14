@@ -1,6 +1,7 @@
 <?php
 require_once('DBConnect.php'); //connect to db
 require_once('isloggedon.php'); //is user online?
+require_once ('commentverify.php');  //check ids and comment
 
 if (!checkuserstatus ())
 {
@@ -12,21 +13,26 @@ else if  ($_POST['recipientid'] == $_POST['senderid'])
 	//cannot comment on own profile
 	echo "cannot comment on own profile";
 }
-else if ($_SESSION[user_id] != $_POST['senderid'])
+else if ($_SESSION[user_id] != $_POST['senderid'] || inputcheck($_POST['recipientid') || !inputcheck($_POST['senderid'))
 {
-	echo "detected hack attempt"; //the comment must be coming from the right person! 
+	echo "detected hack attempt"; //form data does not match session data, or the recipient/sender ids are not valid!
 }
 else
 {
+	if (!commentlength($_POST['content'])) //check length of sent comment
+	{
+	echo "Error with comment length";
+	}
+
 	/* Catch content from HTML form, and format appropriately */
-	$recipient = htmlentities($_POST['recipientid']); 
-	$sender = htmlentities($_POST['senderid']); 
-	$content = htmlentities($_POST['contentid']); 
+	$recipient = strip_tags($_POST['recipientid']); 
+	$sender = strip_tags($_POST['senderid']); 
+	$content = strip_tags($_POST['content']); 
 	/* End user input */
 	
 	$query = "INSERT INTO Comment (SenderID, RecipientID, Content) VALUES (?, ?,?)"; //query
-		$stmt = mysqli_prepare($db, $query); //prepare query
-		mysqli_stmt_bind_param($stmt, 'sss', $sender, $recipient, $content); //define parameters (three strings)
+	$stmt = mysqli_prepare($db, $query); //prepare query
+	mysqli_stmt_bind_param($stmt, 'sss', $sender, $recipient, $content); //define parameters (three strings)
 	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 	{
 		printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
