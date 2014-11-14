@@ -3,7 +3,8 @@ require_once('DBConnect.php'); //connect to db
 require_once('isloggedon.php'); //is user online?
 require_once ('commentverify.php');  //check ids and comment
 
-if (!checkuserstatus ())
+//below code is commented out until registration system is implemented 
+/* if (!checkuserstatus ())
 {
 	//NOT LOGGED IN
 	echo "error, not logged on";
@@ -11,17 +12,18 @@ if (!checkuserstatus ())
 else if  ($_POST['recipientid'] == $_POST['senderid'])
 {
 	//cannot comment on own profile
-	echo "cannot comment on own profile";
+	echo "Error: I'm sorry. You cannot comment on your own profile.";
 }
 else if ($_SESSION[user_id] != $_POST['senderid'] || inputcheck($_POST['recipientid') || !inputcheck($_POST['senderid'))
 {
-	echo "detected hack attempt"; //form data does not match session data, or the recipient/sender ids are not valid!
+	echo "Fatal error: Your user ID does not match our records."; //form data does not match session data, or the recipient/sender ids are not valid!
 }
 else
 {
+*/
 	if (!commentlength($_POST['content'])) //check length of sent comment
 	{
-	echo "Error with comment length";
+	echo "Error: Comment is not long enough. Must be over 100 characters, and less than 5000.";
 	}
 
 	/* Catch content from HTML form, and format appropriately */
@@ -42,6 +44,7 @@ else
 		printf("%d Comment left successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of comments left (will always be 1), and success.
 	}
 	mysqli_stmt_close($stmt); //close prepared statement
-}
+//}//
 mysqli_close ($db); //close database connection
+
 ?>
