@@ -1,4 +1,10 @@
 <?php
+/* 
+Author: Christopher Lodge
+Student ID: 1433022
+Date: 14/11/2014
+Comments: This source is for the page which is used to leave comments on other user's webfolios. 
+*/
 require_once('DBConnect.php'); //connect to db
 require_once('isloggedon.php'); //is user online?
 require_once ('commentverify.php');  //check ids and comment
@@ -14,16 +20,17 @@ else if  ($_POST['recipientid'] == $_POST['senderid'])
 	//cannot comment on own profile
 	echo "Error: I'm sorry. You cannot comment on your own profile.";
 }
-else if ($_SESSION[user_id] != $_POST['senderid'] || inputcheck($_POST['recipientid') || !inputcheck($_POST['senderid'))
+else if ($_SESSION[user_id] != $_POST['senderid'] || !inputcheck($_POST['recipientid') || !inputcheck($_POST['senderid'))
 {
 	echo "Fatal error: Your user ID does not match our records."; //form data does not match session data, or the recipient/sender ids are not valid!
 }
 else
 {
 */
-	if (!commentlength($_POST['content'])) //check length of sent comment
+	if (!commentlength($_POST['content']), 50, 5000) //check length of sent comment 
 	{
-	echo "Error: Comment is not long enough. Must be over 100 characters, and less than 5000.";
+	echo "Error: Comment is not long enough. Must be over 50 characters, and less than 5000.";
+	exit(); //stop script
 	}
 
 	/* Catch content from HTML form, and format appropriately */
