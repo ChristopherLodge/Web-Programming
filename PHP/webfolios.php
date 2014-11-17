@@ -6,7 +6,12 @@ Date: 15/11/2014
 Comments: This script will list all webfolios (users) present on the website, to be used as a directory to each. 
 */
 require_once('../DBConnect.php'); //connect to db
-$query = "SELECT CONCAT(FirstName,' ', LastName) AS Name, DATE_FORMAT(MemberSince, '%d %b %y') AS RegistrationDate From User ORDER BY RegistrationDate DESC";
+$query = "SELECT CONCAT(User.FirstName,' ', User.LastName) AS Name, DATE_FORMAT(User.MemberSince, '%d %b %y') AS RegistrationDate, Max(Course.AcademicLevel) AS EducationLevel, Min(Course.AchieveDate) AS AchievementDate, Course.Title
+FROM User
+LEFT JOIN Course
+ON User.FacebookUserID = Course.LearnerID
+GROUP BY User.FacebookUserID
+ORDER BY Course.AcademicLevel DESC, Course.AchieveDate ASC";
 if (!mysqli_query($db, $query)) //if query fails
 	{
 		printf("Error message: %s", mysqli_error($db)); //show error
@@ -21,4 +26,5 @@ if (!mysqli_query($db, $query)) //if query fails
         $response[] = $row;
     }
  print json_encode($response);
+ //academic level will be converted into FE/HE 
 ?>
