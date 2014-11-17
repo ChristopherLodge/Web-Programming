@@ -31,14 +31,14 @@ require_once ('verify.php');  //check ids and comment
 			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
 		}
 		mysqli_stmt_bind_result($stmt, $name, $registrationdate); //bind results to variables
-		$jsonresult=array(); //create array for variables
+		$userjson=array(); //create array for variables
 		while (mysqli_stmt_fetch($stmt))  //create associative array of records 
 		{
-			$jsonresult[]=array("Name"=>$name, "RegistrationDate"=>$registrationdate);
+			$userjson[]=array("Name"=>$name, "RegistrationDate"=>$registrationdate);
 		}
-		echo json_encode($jsonresult); 
+		echo json_encode($userjson); 
 		/*End User Details */
-		/*Qualifications*/
+		/*Course Details*/
 		$query = "SELECT Title, AchieveDate, AcademicLevel FROM Course WHERE LearnerID = ?"; //query
 		$stmt = mysqli_prepare($db, $query); //prepare query
 		mysqli_stmt_bind_param($stmt, 's', $profileid); //define parameters 
@@ -47,13 +47,45 @@ require_once ('verify.php');  //check ids and comment
 			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
 		}
 		mysqli_stmt_bind_result($stmt, $title, $date, $level); //bind results to variables
-		$jsonresult=array(); //create array for variables
+		$coursejson=array(); //create array for variables
 		while (mysqli_stmt_fetch($stmt))  //create associative array of records 
 		{
-		$jsonresult[]=array("Title"=>$title, "AchieveDate"=>$date, "AcademicLevel"=>$level);
+		$coursejson[]=array("Title"=>$title, "AchieveDate"=>$date, "AcademicLevel"=>$level);
 		}
-		echo json_encode($jsonresult); 
-		/*End Qualification */
+		echo json_encode($coursejson); 
+		/*End Course Details */
+		/*Topic Details*/
+		$query = "SELECT Title, DatePosted FROM Topic WHERE AuthorID = ?"; //query
+		$stmt = mysqli_prepare($db, $query); //prepare query
+		mysqli_stmt_bind_param($stmt, 's', $profileid); //define parameters 
+		if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
+		{
+			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
+		}
+		mysqli_stmt_bind_result($stmt, $title, $date); //bind results to variables
+		$topicjson=array(); //create array for variables
+		while (mysqli_stmt_fetch($stmt))  //create associative array of records 
+		{
+		$topicjson[]=array("Title"=>$title, "DatePosted"=>$date);
+		}
+		echo json_encode($topicjson); 
+		/*End Topic Details */
+		/*Comment Details*/
+		$query = "SELECT Comment.Content, DATE_FORMAT(Comment.DatePosted, '%d %b %y'), CONCAT(User.FirstName,' ', User.LastName) AS SenderName FROM Comment INNER JOIN User ON Comment.SenderID =  User.FacebookUserID WHERE Comment.RecipientID  = ?"; //query
+		$stmt = mysqli_prepare($db, $query); //prepare query
+		mysqli_stmt_bind_param($stmt, 's', $profileid); //define parameters 
+		if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
+		{
+			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
+		}
+		mysqli_stmt_bind_result($stmt, $content, $date, $from); //bind results to variables
+		$commentjson=array(); //create array for variables
+		while (mysqli_stmt_fetch($stmt))  //create associative array of records 
+		{
+		$commentjson[]=array("From"=>$from, "DatePosted"=>$date,"Content"=>$content);
+		}
+		echo json_encode($commentjson); 
+		/*End Topic Details */
 		mysqli_stmt_close($stmt); //close prepared statement
 		mysqli_close ($db); //close database connection
 	}

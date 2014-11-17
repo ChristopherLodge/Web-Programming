@@ -1,0 +1,1 @@
+SELECT Title, AchieveDate, AcademicLevel FROM Course WHERE LearnerID = 123456789;

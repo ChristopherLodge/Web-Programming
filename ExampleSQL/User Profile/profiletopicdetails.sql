@@ -1,0 +1,1 @@
+SELECT Title, DatePosted FROM Topic WHERE AuthorID = ?
