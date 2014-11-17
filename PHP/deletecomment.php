@@ -29,9 +29,9 @@ else
 		{
 			/*catch user input*/
 			$userid = strip_tags($_GET['profileid']); 
-			$courseid = strip_tags($_GET['commentid']); 
+			$commentid = strip_tags($_GET['commentid']); 
 			/* End user input */
-			$query = "DELETE FROM Comment WHERE RecipientID= ? AND CommentID= ?"; //query
+			$query = "DELETE FROM Comment WHERE RecipientID = ? AND CommentID= ?"; //query
 			$stmt = mysqli_prepare($db, $query); //prepare query
 			mysqli_stmt_bind_param($stmt, 'si', $userid, $commentid); //define parameters 
 			if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
@@ -42,7 +42,7 @@ else
 			{
 				printf("%d comments removed. No records exist.", mysqli_stmt_affected_rows($stmt)); //fail
 			}
-			else
+			else 
 			{
 				printf("%d comment deleted successfully.", mysqli_stmt_affected_rows($stmt)); //success
 			}
