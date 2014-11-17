@@ -3,7 +3,7 @@
 Author: Christopher Lodge
 Student ID: 1433022
 Date: 14/11/2014
-Comments: This source is for the page which is create additional topics on a user's webfolio.
+Comments: This page will allow users to list a new course on their webfolio. 
 */
 require_once('../DBConnect.php'); //connect to db
 require_once('isloggedon.php'); //is user online?
@@ -22,29 +22,34 @@ else if ($_SESSION[user_id] != $_POST['authorid'])
 else
 {
 */
-	if (!commentlength($_GET["content"], 50, 5000) || !commentlength($_GET["title"], 5, 100)) //check length of sent comment
+	if (!commentlength($_GET["title"], 5, 100)) //check length of sent comment
 	{
-	printf ("Error: Comment is not long enough. Must be over 50 characters, and under 5000; while the title must be at least 5 characters in length.");
-	exit(); //stop script
+		printf ("Error: Title must be at least 5 characters!");
+		exit(); //stop script
+	}
+	else if (!dateverify($_GET['achievedate']) || !commentlength($_GET['achievedate'], 4, 4))
+	{
+		printf("Error: Date is not recognized");
+		exit();
 	}
 else
 {
 		/* Catch content from HTML form, and format appropriately */
 		$title = strip_tags($_GET['title']); 
-		$author = strip_tags($_GET['authorid']); 
-		$content = strip_tags($_GET['content']); 
+		$author = strip_tags($_GET['learnerid']); 
+		$date= strip_tags($_GET['achievedate']); 
+		$level= strip_tags($_GET['level']); 
 		/* End user input */
-		
-		$query = "INSERT INTO Topic (AuthorID, Title, Content) VALUES (?, ?,?)"; //query
+		$query = "INSERT INTO Course (LearnerID, Title, AchieveDate, AcademicLevel) VALUES (?, ?,?, ?)"; //query
 		$stmt = mysqli_prepare($db, $query); //prepare query
-		mysqli_stmt_bind_param($stmt, 'sss', $author, $title, $content); //define parameters (three strings)
+		mysqli_stmt_bind_param($stmt, 'ssss', $author, $title, $date, $level); //define parameters 
 		if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 		{
 			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
 		}
 		else
 		{
-			printf("%d topic created successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of topics created (will always be 1), and success.
+			printf("%d course added successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of topics created (will always be 1), and success.
 		}
 		mysqli_stmt_close($stmt); //close prepared statement
 	//}//

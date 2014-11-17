@@ -5,9 +5,9 @@ Student ID: 1433022
 Date: 14/11/2014
 Comments: This source is for the page which is used to leave comments on other user's webfolios. 
 */
-require_once('DBConnect.php'); //connect to db
+require_once('../DBConnect.php'); //connect to db
 require_once('isloggedon.php'); //is user online?
-require_once ('commentverify.php');  //check ids and comment
+require_once ('verify.php');  //check ids and comment
 
 //below code is commented out until registration system is implemented 
 /* if (!checkuserstatus ())
