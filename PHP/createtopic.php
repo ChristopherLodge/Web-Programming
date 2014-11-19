@@ -22,13 +22,16 @@ else if ($_SESSION[user_id] != $_POST['authorid'])
 else
 {
 */
-	if (!commentlength($_GET["content"], 50, 5000) || !commentlength($_GET["title"], 5, 100)) //check length of sent comment
+	 if (!isset($_GET['content']) || !isset($_GET['title']) || !isset($_GET['authorid']))
+	 {
+		exit("Missing input!"); //stop script
+	 }
+	else if (!commentlength($_GET["content"], 50, 5000) || !commentlength($_GET["title"], 5, 100)) //check length of sent comment
 	{
-	printf ("Error: Comment is not long enough. Must be over 50 characters, and under 5000; while the title must be at least 5 characters in length.");
-	exit(); //stop script
+	exit("Error: Content is not long enough. Must be over 50 characters, and under 5000; while the title must be at least 5 characters in length.");
 	}
-else
-{
+	else
+	{
 		/* Catch content from HTML form, and format appropriately */
 		$title = strip_tags($_GET['title']); 
 		$author = strip_tags($_GET['authorid']); 
@@ -37,17 +40,19 @@ else
 		
 		$query = "INSERT INTO Topic (AuthorID, Title, Content) VALUES (?, ?,?)"; //query
 		$stmt = mysqli_prepare($db, $query); //prepare query
-		mysqli_stmt_bind_param($stmt, 'sss', $author, $title, $content); //define parameters (three strings)
-		if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
+		if (!mysqli_stmt_bind_param($stmt, 'sss', $author, $title, $content)) //define parameters 
 		{
-			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
+			exit('mysqli error: '.mysqli_error($db));
+		}
+		else if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
+		{
+			printf('Error: %s.', mysqli_stmt_error($stmt)); 
 		}
 		else
 		{
-			printf("%d topic created successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of topics created (will always be 1), and success.
+			printf("%d topic created successfully.", mysqli_stmt_affected_rows($stmt)); //success
 		}
 		mysqli_stmt_close($stmt); //close prepared statement
-	//}//
-	mysqli_close ($db); //close database connection
-}
+		mysqli_close ($db); //close database connection
+	}
 ?>

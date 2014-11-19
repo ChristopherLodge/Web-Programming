@@ -22,8 +22,12 @@ else if ($_SESSION[user_id] != $_POST['authorid'])
 else
 {
 */
-	if (!commentlength($_GET["title"], 5, 100)) //check length of sent comment
-	{
+	 if (!isset($_GET['learnerid']) || !isset($_GET['achievedate']) || !isset($_GET['level']) || !isset($_GET['title']))
+	 {
+		exit("Missing input!"); //stop script
+	 }
+	 else if (!commentlength($_GET["title"], 5, 100)) //check length of sent comment
+	 {
 		printf ("Error: Title must be at least 5 characters!");
 		exit(); //stop script
 	}
@@ -41,18 +45,20 @@ else
 		$level= strip_tags($_GET['level']); 
 		/* End user input */
 		$query = "INSERT INTO Course (LearnerID, Title, AchieveDate, AcademicLevel) VALUES (?, ?,?, ?)"; //query
-		$stmt = mysqli_prepare($db, $query); //prepare query
-		mysqli_stmt_bind_param($stmt, 'ssss', $author, $title, $date, $level); //define parameters 
-		if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
-		{
-			printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
+			$stmt = mysqli_prepare($db, $query); //prepare query
+			 if (!mysqli_stmt_bind_param($stmt, 'ssss', $author, $title, $date, $level)) //define parameters 
+			{
+				exit('mysqli error: '.mysqli_error($db));
+			}
+			else if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
+			{
+				printf('Error: %s.', mysqli_stmt_error($stmt)); 
+			}
+			else
+			{
+				printf("%d topic modified successfully.", mysqli_stmt_affected_rows($stmt)); //success
+			}
+			mysqli_stmt_close($stmt); //close prepared statement
+			mysqli_close ($db); //close database connection
 		}
-		else
-		{
-			printf("%d course added successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of topics created (will always be 1), and success.
-		}
-		mysqli_stmt_close($stmt); //close prepared statement
-	//}//
-	mysqli_close ($db); //close database connection
-}
 ?>

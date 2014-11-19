@@ -15,43 +15,43 @@ require_once ('verify.php');  //check ids and comment
 	//NOT LOGGED IN
 	echo "error, not logged on";
 }
-else if  ($_POST['recipientid'] == $_POST['senderid'])
-{
-	//cannot comment on own profile
-	echo "Error: I'm sorry. You cannot comment on your own profile.";
-}
-else if ($_SESSION[user_id] != $_POST['senderid'] || !inputcheck($_POST['recipientid') || !inputcheck($_POST['senderid'))
-{
-	echo "Fatal error: Your user ID does not match our records."; //form data does not match session data, or the recipient/sender ids are not valid!
-}
+*/
+ if (!isset($_GET['content']) || !isset($_GET['recipientid']) || !isset($_GET['senderid']))
+	 {
+		exit("Missing input!"); //stop script
+	 }
+	else if (!commentlength($_GET["content"], 50, 500)) //check length of sent comment
+	{
+		exit("Error: Content is not long enough. Must be over 50 characters, and under 500.");
+	}
+	else if ($_GET['recipientid'] == $_GET['senderid'])
+	{
+		exit("You cannot comment on your own profile"); //cannot comment on own profile
+	}
 else
 {
-*/
-	if (!commentlength($_POST['content']), 50, 5000) //check length of sent comment 
-	{
-	echo "Error: Comment is not long enough. Must be over 50 characters, and less than 5000.";
-	exit(); //stop script
-	}
-
 	/* Catch content from HTML form, and format appropriately */
-	$recipient = strip_tags($_POST['recipientid']); 
-	$sender = strip_tags($_POST['senderid']); 
-	$content = strip_tags($_POST['content']); 
+	$recipient = strip_tags($_GET['recipientid']); 
+	$sender = strip_tags($_GET['senderid']); 
+	$content = strip_tags($_GET['content']); 
 	/* End user input */
-	
+
 	$query = "INSERT INTO Comment (SenderID, RecipientID, Content) VALUES (?, ?,?)"; //query
 	$stmt = mysqli_prepare($db, $query); //prepare query
-	mysqli_stmt_bind_param($stmt, 'sss', $sender, $recipient, $content); //define parameters (three strings)
-	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
-	{
-		printf('Error: %s.', mysqli_stmt_error($stmt)); //error handling
-	}
-	else
-	{
-		printf("%d Comment left successfully.", mysqli_stmt_affected_rows($stmt)); //shows number of comments left (will always be 1), and success.
-	}
-	mysqli_stmt_close($stmt); //close prepared statement
-//}//
-mysqli_close ($db); //close database connection
+		if (!mysqli_stmt_bind_param($stmt, 'sss', $sender, $recipient, $content)) //define parameters 
+		{
+			exit('mysqli error: '.mysqli_error($db));
+		}
+		else if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
+		{
+			printf('Error: %s.', mysqli_stmt_error($stmt)); 
+		}
+		else
+		{
+			printf("%d comment sent successfully.", mysqli_stmt_affected_rows($stmt)); //success
+		}
+		mysqli_stmt_close($stmt); //close prepared statement
+		mysqli_close ($db); //close database connection
+}
 
 ?>
