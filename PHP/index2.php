@@ -1,6 +1,6 @@
 <!-- HTML elements for header --> 
 <?php
-	require_once('DBConnect.php'); //connect to db
+	require_once('../DBConnect.php'); //connect to db
 	require_once('isloggedon.php'); //is user online?
 	require_once('randomprofile.php'); //needed for random user image
 	

@@ -7,7 +7,6 @@ Comments: This script will act as the core for a profile system. It will select 
 */
 require_once('../DBConnect.php'); //connect to db
 require_once('isloggedon.php'); //is user online?
-require_once ('verify.php');  //check ids and comment
 //below code is commented out until registration system is implemented 
 /* if (!checkuserstatus ())
 {
@@ -39,6 +38,7 @@ else
 	{
 		exit('Error %s.'.mysqli_stmt_error($stmt));
 	}
+	
 	$userjson=array(); //create array for variables
 	while (mysqli_stmt_fetch($stmt))  //create associative array of records 
 	{
@@ -49,10 +49,6 @@ else
 	/*End User Details */
 	/*Course Details*/
 	$query = "SELECT Title, AchieveDate, AcademicLevel FROM Course WHERE LearnerID = ?"; //query
-	
-	
-	
-	
 	$stmt = mysqli_prepare($db, $query); //prepare query
 	if (!mysqli_stmt_bind_param($stmt, 's', $profileid)) //define parameters 
 	{
@@ -120,7 +116,6 @@ else
 	echo json_encode($commentjson); 
 	mysqli_stmt_close($stmt); //close prepared statement
 	/*End Comment Details */
-	
 	mysqli_close ($db); //close database connection
 }
 ?>
