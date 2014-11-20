@@ -28,7 +28,7 @@ else
 	$stmt = mysqli_prepare($db, $query); //prepare query
 	if (!mysqli_stmt_bind_param($stmt, 's', $profileid)) //define parameters 
 	{
-		exit('mysqli error: '.mysqli_error($db));
+		exit('Error: '.mysqli_stmt_error($stmt));
 	}
 	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 	{
@@ -36,7 +36,7 @@ else
 	}
 	if (!mysqli_stmt_bind_result($stmt, $name, $registrationdate)) //bind results to variables
 	{
-		exit('Error %s.'.mysqli_stmt_error($stmt));
+		exit('Error: '.mysqli_stmt_error($stmt));
 	}
 	
 	$userjson=array(); //create array for variables
@@ -52,15 +52,15 @@ else
 	$stmt = mysqli_prepare($db, $query); //prepare query
 	if (!mysqli_stmt_bind_param($stmt, 's', $profileid)) //define parameters 
 	{
-		exit('mysqli error: '.mysqli_error($db));
+		exit('Error: '.mysqli_stmt_error($stmt));
 	}
 	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 	{
-		exit('Error'.mysqli_stmt_error($stmt)); //error handling
+		exit('Error: '.mysqli_stmt_error($stmt)); //error handling
 	}
 	if (!mysqli_stmt_bind_result($stmt, $title, $date, $level)) //bind results to variables
 	{
-		exit('Error'.mysqli_stmt_error($stmt)); //error handling
+		exit('Error: '.mysqli_stmt_error($stmt)); //error handling
 	}
 	$coursejson=array(); //create array for variables
 	while (mysqli_stmt_fetch($stmt))  //create associative array of records 
@@ -71,24 +71,24 @@ else
 	mysqli_stmt_close($stmt); //close prepared statement
 	/*End Course Details */
 	/*Topic Details*/
-	$query = "SELECT Title, DatePosted FROM Topic WHERE AuthorID = ?"; //query
+	$query = "SELECT Title, DatePosted, Content FROM Topic WHERE AuthorID = ?"; //query
 	$stmt = mysqli_prepare($db, $query); //prepare query
 	if (!mysqli_stmt_bind_param($stmt, 's', $profileid)) //define parameters 
 	{
-		exit('mysqli error: '.mysqli_error($db));
+		exit('Error: '.mysqli_stmt_error($stmt));
 	}
 	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 	{
-		exit('Error'.mysqli_stmt_error($stmt)); //error handling
+		exit('Error: '.mysqli_stmt_error($stmt)); //error handling
 	}
-	if (!mysqli_stmt_bind_result($stmt, $title, $date)) //bind results to variables
+	if (!mysqli_stmt_bind_result($stmt, $title, $date, $content)) //bind results to variables
 	{
-		exit('Error'.mysqli_stmt_error($stmt)); //error handling
+		exit('Error: '.mysqli_stmt_error($stmt)); //error handling
 	}
 	$topicjson=array(); //create array for variables
 	while (mysqli_stmt_fetch($stmt))  //create associative array of records 
 	{
-		$topicjson[]=array("Title"=>$title, "DatePosted"=>$date);
+		$topicjson[]=array("Title"=>$title, "DatePosted"=>$date, "Content"=>$content);
 	}
 	echo json_encode($topicjson);
 	mysqli_stmt_close($stmt); //close prepared statement	
@@ -98,15 +98,15 @@ else
 	$stmt = mysqli_prepare($db, $query); //prepare query
 	if (!mysqli_stmt_bind_param($stmt, 's', $profileid)) //define parameters 
 	{
-		exit('mysqli error: '.mysqli_error($db));
+		exit('Error: '.mysqli_stmt_error($stmt));
 	}
 	if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 	{
-		printf('Error: %s.', mysqli_stmt_error($stmt)); 
+		exit('Error: '.mysqli_stmt_error($stmt)); 
 	}
 	if (!mysqli_stmt_bind_result($stmt, $content, $date, $from)) //bind results to variables
 	{
-		printf('Error: %s.', mysqli_stmt_error($stmt)); 
+		exit('Error: '.mysqli_stmt_error($stmt));
 	}
 	$commentjson=array(); //create array for variables
 	while (mysqli_stmt_fetch($stmt))  //create associative array of records 

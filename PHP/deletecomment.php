@@ -39,11 +39,11 @@ else
 			$stmt = mysqli_prepare($db, $query); //prepare query	
 			if (!mysqli_stmt_bind_param($stmt, 'si', $userid, $commentid)) //define parameters 
 			{
-				exit('mysqli error: '.mysqli_error($db));
+				 exit('Error: '.mysqli_stmt_error($stmt));
 			}
 			else if (!mysqli_stmt_execute($stmt)) //execute the "safe" statement
 			{
-				printf('Error: %s.', mysqli_stmt_error($stmt)); 
+				 exit('Error: '.mysqli_stmt_error($stmt));
 			}
 			else
 			{
