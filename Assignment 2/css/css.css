@@ -1,0 +1,29 @@
+#content
+{
+padding: 40px 15px;
+display:none; /*hide for JS check */
+}
+#logincheck
+{
+font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+color: #9d9d9d;
+padding: 15px 15px;
+}
+.navbar .container 
+{ 
+min-height: 85px; /* custom header height */
+}
+
+.navbar-fixed-top  /* compensate margins to allow content */
+{
+    position:static;
+    margin-bottom:20px;
+}
+.navbar-brand
+{
+width:210px; /* format fix for brand/dropdown clash */
+}
+.navbar-collapse
+{
+margin-top: 25px; /* fix collapsed navbar */
+}
